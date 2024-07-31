@@ -1,20 +1,29 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import { PaperProvider } from 'react-native-paper';
+import { Provider } from 'react-redux'
+import {store} from './src/Redux'; // Asegúrate de que la ruta sea correcta
+import AppNavigator from './src/Routes/routeInit';
+import { lightTheme, darkTheme } from './src/Config/Theme'; // Asegúrate de que la ruta sea correcta
+import { useAppSelector } from './src/Redux/hooks';
+import { selectGenearlSlice } from './src/Redux/features/generalSlice';
+
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <Provider store={store}>
+      <MainApp />
+    </Provider>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+
+function MainApp()  {
+  const { theme } = useAppSelector(selectGenearlSlice) || { theme: 'light' };
+  const paperTheme = theme === 'light' ? lightTheme : darkTheme;
+
+  return (
+    <PaperProvider theme={paperTheme}>
+      <AppNavigator />
+    </PaperProvider>
+  );
+};
